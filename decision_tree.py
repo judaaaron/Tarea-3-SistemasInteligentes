@@ -12,7 +12,6 @@ cols = ["buenas_papas", "carne_fresca", "combos_familiares", "con_hongos", "con_
 validation_data = pd.read_csv("validation_data.csv")
 clasesValidaciones = validation_data.pop("class")
 validation_data = validation_data.replace({"Si": 1, "No": 0})
-validation_data = validation_data.iloc[:100] #esto
 xVal = validation_data[cols]
 
 
