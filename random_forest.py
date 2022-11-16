@@ -29,9 +29,9 @@ y = clases
 rfc = RandomForestClassifier(n_estimators=int(cantidad_n), max_depth=int(depth))
 rfc.fit(x,y)
 
-y_pred = rfc.predict(xVal)
+y_pred = rfc.predict(x)
 
-print(classification_report(y_pred, y, digits = 4))
+print(classification_report(y, y_pred, digits = 4))
 
 print()
 
