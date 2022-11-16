@@ -21,7 +21,7 @@ cols = training_data.columns.tolist()
 
 validation_data = pd.read_csv(nombrearchivovalidacion)
 validation_data = validation_data.replace({"Si": 1, "No": 0})
-
+xVal = validation_data[cols]
 x= training_data[cols]
 y = clases
 
@@ -29,7 +29,7 @@ y = clases
 rfc = RandomForestClassifier(n_estimators=int(cantidad_n), max_depth=int(depth))
 rfc.fit(x,y)
 
-y_pred = rfc.predict(x)
+y_pred = rfc.predict(xVal)
 
 print(classification_report(y_pred, y, digits = 4))
 
