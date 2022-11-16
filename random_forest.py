@@ -2,6 +2,7 @@ import sys
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 from sklearn.metrics import classification_report
+import pickle
 
 nombrearchivoentrenar = sys.argv[1]
 nombrearchivovalidacion = sys.argv[2]
@@ -14,7 +15,6 @@ depth = sys.argv[4]
 training_data = pd.read_csv(nombrearchivoentrenar)
 clases = training_data.pop("class")
 training_data = training_data.replace({"Si": 1, "No": 0})
-print()
 
 cols = training_data.columns.tolist()
 
@@ -29,10 +29,8 @@ y = clases
 rfc = RandomForestClassifier(n_estimators=int(cantidad_n), max_depth=int(depth))
 rfc.fit(x,y)
 
-y_pred = rfc.predict(x)
-
-print(classification_report(y, y_pred, digits = 4))
-
-print()
-
-# print(type(clases))
+nombre = "RandomForest-"+ cantidad_n + "-" + depth + ".pkl"
+print(nombre)
+filename = nombre
+with open(filename, 'wb') as f:
+    pickle.dump(rfc, f)
