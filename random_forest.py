@@ -4,33 +4,33 @@ import pandas as pd
 from sklearn.metrics import classification_report
 import pickle
 
-nombrearchivoentrenar = sys.argv[1]
-nombrearchivovalidacion = sys.argv[2]
-cantidad_n = sys.argv[3]
-depth = sys.argv[4]
 
-# cols = ["buenas_papas", "carne_fresca", "combos_familiares", "con_hongos", "con_huevo", "con_pepinillos", "de_pescado", "de_pollo", "jugosas", "juguetes", "malteadas", "mas_salsa", "opciones_quesos", "opciones_vegetarianas", "rapidez"]
+archivosTraining = ["training_data_small.csv", "training_data_medium.csv", "training_data_large.csv", "training_data_very_large.csv"]
+nPosibles = [5, 10, 50, 100]
+depths = [2, 4, 6]
+
+#for each archivosTraining, for each nPosibles, for each depth, create a model and save it in a file
+
+for trainFile in archivosTraining:
+    for n in nPosibles:
+        for depth in depths:
+            i = 1
+            preName = trainFile.split(".")[0]
+            preName = preName.split("_")[2]
+            
+            training_data = pd.read_csv(trainFile)
+            clases = training_data.pop('class')
+            training_data = training_data.replace({"Si": 1, "No": 0})
+            cols = training_data.columns.tolist()
+            x = training_data[cols]
+            y = clases
+            
+            rfc = RandomForestClassifier(n_estimators=n, max_depth=depth)
+            rfc.fit(x,y)
+            nombre = "./modelsRFC/RandomForest-" + preName + "-" + str(n) + "-" + str(depth) + ".pkl"
+            filename = nombre
+            with open(filename, 'wb') as f:
+                pickle.dump(rfc, f)
+            
 
 
-training_data = pd.read_csv(nombrearchivoentrenar)
-clases = training_data.pop("class")
-training_data = training_data.replace({"Si": 1, "No": 0})
-
-cols = training_data.columns.tolist()
-
-
-validation_data = pd.read_csv(nombrearchivovalidacion)
-validation_data = validation_data.replace({"Si": 1, "No": 0})
-xVal = validation_data[cols]
-x= training_data[cols]
-y = clases
-
-
-rfc = RandomForestClassifier(n_estimators=int(cantidad_n), max_depth=int(depth))
-rfc.fit(x,y)
-
-nombre = "RandomForest-"+ cantidad_n + "-" + depth + ".pkl"
-print(nombre)
-filename = nombre
-with open(filename, 'wb') as f:
-    pickle.dump(rfc, f)
