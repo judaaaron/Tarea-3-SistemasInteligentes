@@ -39,7 +39,7 @@ print ("Tiempo total de predicción: ",end-start)
 
 
 con = confusion_matrix(y, y_pred, labels=clasesNoRepetidas)
-report = classification_report(y, y_pred, labels=clasesNoRepetidas, digits=4, output_dict=True)
+report = classification_report(y, y_pred, labels=clasesNoRepetidas, digits=4, output_dict=True, zero_division=0)
 
 trainAcc = '{:.4f}'.format(pickle_model["trainingAcc"])
 valAcc = '{:.4f}'.format(report["accuracy"])
@@ -49,8 +49,8 @@ avgRecall = '{:.4f}'.format(report["macro avg"]["recall"])
 
 
 con_disp = ConfusionMatrixDisplay(confusion_matrix= con, display_labels = clasesNoRepetidas)
-con_disp.plot()
-plt.show()
+# con_disp.plot()
+# plt.show()
 
 isFile1 = os.path.exists("./Resultados/resultadosRandomForest.csv")
 isFile2 = os.path.exists("./Resultados/resultadosDecisionTree.csv")
@@ -62,7 +62,7 @@ if(pickle_model["tipo"] == "RandomForest"):
         with open('./Resultados/resultadosRandomForest.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             if(pickle_model["size"] == "very"):
-                pickle_model["size"] = "Very Large"
+                pickle_model["size"] = "Very-Large"
             row = [pickle_model["size"], pickle_model["n_estimators"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
             writer.writerow(row)
             print("Datos escritos en ./Resultados/resultadosRandomForest.csv satisfactoriamente")
@@ -71,7 +71,7 @@ if(pickle_model["tipo"] == "RandomForest"):
             writer = csv.writer(file)
             writer.writerow(headerRF)
             if(pickle_model["size"] == "very"):
-                pickle_model["size"] = "Very Large"
+                pickle_model["size"] = "Very-Large"
             row = [pickle_model["size"], pickle_model["n_estimators"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
             writer.writerow(row)
             print("Archivo creado y datos escritos en ./Resultados/resultadosRandomForest.csv satisfactoriamente")
@@ -81,7 +81,7 @@ elif(pickle_model["tipo"] == "DecisionTree"):
         with open('./Resultados/resultadosDecisionTree.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             if(pickle_model["size"] == "very"):
-                pickle_model["size"] = "Very Large"
+                pickle_model["size"] = "Very-Large"
             row = [pickle_model["size"], pickle_model["criterio"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
             writer.writerow(row)
             print("Datos escritos en resultadosDecisionTree.csv satisfactoriamente")
@@ -90,7 +90,7 @@ elif(pickle_model["tipo"] == "DecisionTree"):
             writer = csv.writer(file)
             writer.writerow(headerDT)
             if(pickle_model["size"] == "very"):
-                pickle_model["size"] = "Very Large"
+                pickle_model["size"] = "Very-Large"
             row = [pickle_model["size"], pickle_model["criterio"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
             writer.writerow(row)
             print("Archivo creado y datos escritos en ./Resultados/resultadosDecisionTree.csv satisfactoriamente")
