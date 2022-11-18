@@ -39,44 +39,58 @@ print ("Tiempo total de predicción: ",end-start)
 
 
 con = confusion_matrix(y, y_pred, labels=clasesNoRepetidas)
-recall = recall_score(y, y_pred, average='macro')
-print("Recall: ", recall)
-f1 = f1_score(y, y_pred, average='macro')
-print("F1: ", f1)
+report = classification_report(y, y_pred, labels=clasesNoRepetidas, digits=4, output_dict=True)
 
+trainAcc = '{:.4f}'.format(pickle_model["trainingAcc"])
+valAcc = '{:.4f}'.format(report["accuracy"])
+avgF1 = '{:.4f}'.format(report["macro avg"]["f1-score"])
+avgPrecision = '{:.4f}'.format(report["macro avg"]["precision"])
+avgRecall = '{:.4f}'.format(report["macro avg"]["recall"])
 
-#acg precision sale de classification report
 
 con_disp = ConfusionMatrixDisplay(confusion_matrix= con, display_labels = clasesNoRepetidas)
 con_disp.plot()
 plt.show()
 
-isFile1 = os.path.exists("resultadosRandomForest.csv")
-isFile2 = os.path.exists("resultadosDecisionTree.csv")
-headerDT = ["Train Dataset", "Criterion", "Depth", "Train Acc.", "Val Acc.", "Val Avg. Prec", "Val Avg. F1", "Time Train", "Time Val."]
-headerRF = ["Train Dataset", "N Trees", "Depth", "Train Acc.", "Val Acc.", "Val Avg. Prec", "Val Avg. F1", "Time Train", "Time Val."]
+isFile1 = os.path.exists("./Resultados/resultadosRandomForest.csv")
+isFile2 = os.path.exists("./Resultados/resultadosDecisionTree.csv")
+headerDT = ["Train Dataset", "Criterion", "Depth", "Train Acc.", "Val Acc.","Val. Avg Rec", "Val Avg. Prec", "Val Avg. F1", "Time Train", "Time Val."]
+headerRF = ["Train Dataset", "N Trees", "Depth", "Train Acc.", "Val Acc.","Val. Avg Rec", "Val Avg. Prec", "Val Avg. F1", "Time Train", "Time Val."]
 
-# if(modelFile.__contains__("RandomForest")):
-#     if(isFile1):
-#         with open('resultadosRandomForest.csv', 'a') as file:
-#             writer = csv.writer(file)
-#             writer.writerow([recall, f1, pickle_model["trainingTime"], pickle_model["trainingAcc"]])
-#     else:
-#         # si no existe el archivo, lo creo y agrego una linea
-#         with open('resultadosRandomForest.csv', 'w') as file:
-#             writer = csv.writer(file)
-#             writer.writerow(headerRF)
-#             writer.writerow([recall, f1, pickle_model["trainingTime"], pickle_model["trainingAcc"]])
-#             print("Datos escritos en resultadosRandomForest.csv satisfactoriamente")
-# else:
-#     if(isFile2):
-#         print("Existe el archivo")
-#         with open('resultadosDecisionTree.csv', 'a') as file:
-#             writer = csv.writer(file)
-#             writer.writerow([modelFile])
-#     else:
-#         with open('resultadosDecisionTree.csv', 'w' ) as file:
-#             writer = csv.writer(file)
-#             writer.writerow(headerDT)
-#             writer.writerow([modelFile])
-    
+if(pickle_model["tipo"] == "RandomForest"):
+    if(isFile1):
+        with open('./Resultados/resultadosRandomForest.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            if(pickle_model["size"] == "very"):
+                pickle_model["size"] = "Very Large"
+            row = [pickle_model["size"], pickle_model["n_estimators"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
+            writer.writerow(row)
+            print("Datos escritos en ./Resultados/resultadosRandomForest.csv satisfactoriamente")
+    else:
+        with open('./Resultados/resultadosRandomForest.csv', 'w', newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(headerRF)
+            if(pickle_model["size"] == "very"):
+                pickle_model["size"] = "Very Large"
+            row = [pickle_model["size"], pickle_model["n_estimators"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
+            writer.writerow(row)
+            print("Archivo creado y datos escritos en ./Resultados/resultadosRandomForest.csv satisfactoriamente")
+
+elif(pickle_model["tipo"] == "DecisionTree"):
+    if(isFile2):
+        with open('./Resultados/resultadosDecisionTree.csv', 'a', newline='') as file:
+            writer = csv.writer(file)
+            if(pickle_model["size"] == "very"):
+                pickle_model["size"] = "Very Large"
+            row = [pickle_model["size"], pickle_model["criterio"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
+            writer.writerow(row)
+            print("Datos escritos en resultadosDecisionTree.csv satisfactoriamente")
+    else:
+        with open('./Resultados/resultadosDecisionTree.csv', 'w',newline='') as file:
+            writer = csv.writer(file)
+            writer.writerow(headerDT)
+            if(pickle_model["size"] == "very"):
+                pickle_model["size"] = "Very Large"
+            row = [pickle_model["size"], pickle_model["criterio"], pickle_model["depth"],trainAcc, valAcc, avgRecall, avgPrecision, avgF1, '{:.6f}'.format(pickle_model["trainingTime"]) ,'{:.6f}'.format(end-start)]
+            writer.writerow(row)
+            print("Archivo creado y datos escritos en ./Resultados/resultadosDecisionTree.csv satisfactoriamente")

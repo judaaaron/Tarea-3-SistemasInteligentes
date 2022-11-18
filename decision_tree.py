@@ -12,7 +12,7 @@ try:
     depth = sys.argv[3]
 except IndexError:
     depth = None
-
+    
 preName = trainFile.split(".")[1]
 preName = preName.split("_")[2]
 
@@ -23,9 +23,6 @@ training_data = training_data.replace({"Si": 1, "No": 0})
 cols = training_data.columns.tolist()
 x = training_data[cols]
 y = clases
-
-
-
 
 if depth is not None:
     depth = int(depth)
@@ -38,7 +35,7 @@ print("Tiempo total de entrenamiento Decision Tree: ", end-start)
 y_pred = clf.predict(x)
 val = accuracy_score(y_true=y, y_pred=y_pred)
 
-datos = {"trainingTime": end-start, "trainingAcc": val, "modelo": clf}
+datos = {"trainingTime": end-start, "trainingAcc": val, "modelo": clf, "criterio": criterio, "depth": depth, "tipo": "DecisionTree", "size": preName}
 print("Datos de entrenamiento: ",datos)
 
 nombre = "./Modelos/DecisionTree/DecisionTree-" + preName + "-"+ criterio + "-" + str(depth) + ".pkl"
@@ -47,4 +44,4 @@ with open(filename, 'wb') as f:
     pickle.dump(datos, f)
 
 
-print("Modelo guardado en:", nombre,)
+print("Modelo guardado en:", nombre)

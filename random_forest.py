@@ -9,9 +9,6 @@ trainFile = sys.argv[1]
 n = sys.argv[2]
 depth = sys.argv[3]
 
-#for each archivosTraining, for each nPosibles, for each depth, create a model and save it in a file
-
-#print(trainFile, n, depth)
 preName = trainFile.split(".")[1]
 preName = preName.split("_")[2]
 
@@ -32,7 +29,7 @@ print("Tiempo total de entrenamiento Random Forest: ", end-start)
 y_pred = rfc.predict(x)
 val = accuracy_score(y_true=y, y_pred=y_pred)
 
-datos = {"trainingTime": end-start, "trainingAcc": val, "modelo": rfc}
+datos = {"trainingTime": end-start, "trainingAcc": val, "modelo": rfc, "n_estimators": n, "depth": depth, "tipo": "RandomForest", "size": preName}
 print("Datos de entrenamiento: ",datos)
 
 nombre = "./Modelos/RandomForest/RandomForest-" + preName + "-" + str(n) + "-" + str(depth) + ".pkl"
