@@ -49,8 +49,11 @@ avgRecall = '{:.4f}'.format(report["macro avg"]["recall"])
 
 
 con_disp = ConfusionMatrixDisplay(confusion_matrix= con, display_labels = clasesNoRepetidas)
+feat_importances = pd.Series(modelo.feature_importances_, index=cols)
+feat_importances.nlargest(15).plot(kind='barh')
+plt.title("Importancia de las características")
 # con_disp.plot()
-# plt.show()
+plt.show()
 
 isFile1 = os.path.exists("./Resultados/resultadosRandomForest.csv")
 isFile2 = os.path.exists("./Resultados/resultadosDecisionTree.csv")
